@@ -125,13 +125,16 @@ class _NewCarState extends State<NewCar> {
                             model: widget.carModel,
                             make: widget.make,
                             registrationNo: widget.regNo));
+                        showSnackBar(context, Text("ADDED"));
                       }else{
                         context.read<CarProvider>().updateCar(Car(
                             color: widget.color,
                             model: widget.carModel,
                             make: widget.make,
                             registrationNo: widget.regNo), widget.regNo);
+                        showSnackBar(context, Text("UPDATED"));
                       }
+
                     }
                   },
                   child: Text(widget.carStatus == CarStatus.newCar

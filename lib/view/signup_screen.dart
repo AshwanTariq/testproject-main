@@ -19,7 +19,7 @@ class _SignupScreenState extends State<SignupScreen> {
   // Create controllers for the email and password fields
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
+  final _passwordControllerReWrite = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +66,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               const  SizedBox(height: 10.0),
                 TextFormField(
-                  controller: _passwordController,
+                  controller: _passwordControllerReWrite,
                   decoration: getInputDecoration("Enter again"),
                   obscureText: true,
                   validator: (value) {
