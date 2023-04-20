@@ -1,3 +1,0 @@
-enum CarStatus{
-  editCar,newCar
-}

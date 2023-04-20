@@ -1,63 +1,43 @@
-import 'dart:async';
+
 
 import 'package:flutter/material.dart';
-import 'package:jobtest/utils/session_controller.dart';
-import 'package:jobtest/view/dashboard_screen.dart';
-import 'package:jobtest/view/login_screen.dart';
-import 'package:jobtest/view/splash_screen.dart';
-import 'package:jobtest/view_model/car_provider/car_provider.dart';
-import 'package:path_provider/path_provider.dart';
-
-import 'package:path/path.dart';
+import 'package:jobtest/services/api_auth_service.dart';
+import 'package:jobtest/services/auth_service.dart';
+import 'package:jobtest/services/mock_auth_service.dart';
+import 'package:jobtest/views/landing/landing_page.dart';
+import 'package:jobtest/views/login/login_page.dart';
 import 'package:provider/provider.dart';
 
-import 'models/car/car_model.dart';
+import 'models/user.dart';
 
 void main() async {
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => CarProvider()),
-  ], child: MyApp()));
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
-
-  ThemeData themeData = ThemeData(
-    primarySwatch: Colors.purple,
-  );
-  UserSession session = UserSession();
-  // This widget is the root of your application.
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: themeData,
-      home: FutureBuilder<bool>(
-          future: session.isLoggedIn(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const SplashScreen();
-            }
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasData) {
-                bool? flag = snapshot.data;
-                if (flag == true) {
-                  return Dashboard();
-                } else {
-                  return LoginScreen();
-                }
-              }
-              if (snapshot.hasError) {
-                return const Scaffold(
-                    body: Center(
-                  child: Text("ERROR"),
-                ));
-              }
-            }
-            return const Scaffold(
-                body: Center(
-              child: Text("ERROR LAST CALL RETURN"),
-            ));
-          }),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => User()),
+        Provider<AuthService>(
+          create: (_) => ApiAuthService(),
+        ),
+        Provider<MockAuthService>(
+          create: (_) => MockAuthService(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Login Demo',
+
+        initialRoute: '/',
+        routes: {
+          '/': (context) => LoginPage(),
+          '/landing': (context) => LandingPage(),
+        },
+      ),
     );
   }
 }
